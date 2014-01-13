@@ -186,8 +186,10 @@ def extract_normalize_yandex_data(data):
     profile['displayName'] = (
         real_name
         or display_name
-        or u'Yandex user #{id}'.format(id=data['id'])
+        or 'Yandex user #{id}'.format(id=data['id'])
     )
+    #TODO:         or u'Yandex user #{id}'.format(id=data['id'])
+
 
     # Now strip out empty values
     for k, v in profile.items():

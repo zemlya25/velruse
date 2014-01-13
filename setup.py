@@ -8,7 +8,7 @@ PY3 = sys.version_info[0] >= 3
 requires = [
     'pyramid',
     'requests',
-    'requests-oauthlib',
+    'requests-oauthlib>=0.4.0',
     'anykeystore',
 ]
 
@@ -38,7 +38,7 @@ except IOError:
     README = CHANGES = ''
 
 setup(name='velruse',
-      version='1.1.1',
+      version='1.1.2',
       description=(
           'Simplifying third-party authentication for web applications.'),
       long_description=README + '\n\n' + CHANGES,
@@ -49,9 +49,9 @@ setup(name='velruse',
           'Programming Language :: Python :: 2',
           'Programming Language :: Python :: 2.6',
           'Programming Language :: Python :: 2.7',
-#          'Programming Language :: Python :: 3',
-#          'Programming Language :: Python :: 3.2',
-#          'Programming Language :: Python :: 3.3',
+          'Programming Language :: Python :: 3',
+          'Programming Language :: Python :: 3.2',
+          'Programming Language :: Python :: 3.3',
           'Topic :: Internet :: WWW/HTTP :: WSGI :: Application',
           'Framework :: Pyramid',
       ],
@@ -72,6 +72,7 @@ setup(name='velruse',
           'docs': docs_extras,
           'testing': testing_extras,
       },
+      #use_2to3=True,
       entry_points="""
       [paste.app_factory]
       main = velruse.app:make_app

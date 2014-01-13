@@ -1,6 +1,7 @@
 """LinkedIn Authentication Views"""
 import requests
 from requests_oauthlib import OAuth1
+from requests_oauthlib import OAuth2
 
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import NO_PERMISSION_REQUIRED
@@ -95,10 +96,16 @@ class LinkedInProvider(object):
 
     def callback(self, request):
         """Process the LinkedIn redirect"""
-        if 'denied' in request.GET:
-            return AuthenticationDenied("User denied authentication",
-                                        provider_name=self.name,
-                                        provider_type=self.type)
+        if 'oauth_problem' in request.GET:
+            oauth_problems=','.join(request.GET.getall('oauth_problem'))
+            return AuthenticationDenied("ProblemReporting: %s" % oauth_problems,
+                                         provider_name=self.name,
+                                         provider_type=self.type)        
+        
+        #if 'denied' in request.GET:
+        #    return AuthenticationDenied("User denied authentication",
+        #                                provider_name=self.name,
+        #                                provider_type=self.type)
 
         verifier = request.GET.get('oauth_verifier')
         if not verifier:
@@ -147,7 +154,9 @@ class LinkedInProvider(object):
         profile['name'] = {
             'givenName': data['firstName'],
             'familyName': data['lastName'],
-            'formatted': u'%s %s' % (data['firstName'], data['lastName'])
+            #TODO: 'formatted': u'%s %s' % (data['firstName'], data['lastName'])
+
+            'formatted': '%s %s' % (data['firstName'], data['lastName'])
         }
         if data.get('emailAddress'):
             profile['emails'] = [{'value': data.get('emailAddress')}]

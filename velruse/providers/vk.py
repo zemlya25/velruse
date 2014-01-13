@@ -16,10 +16,13 @@ from ..api import (
     AuthenticationDenied,
     register_provider,
 )
+
 from ..exceptions import CSRFError, ThirdPartyFailure
 from ..settings import ProviderSettings
 from ..utils import flat_url
 from ..compat import u
+from ..compat import PY3
+
 
 
 PROVIDER_NAME = 'vk'
@@ -192,7 +195,7 @@ def extract_normalize_vk_data(data):
         profile['name']['givenName'] = data['first_name']
     if data['last_name']:
         profile['name']['familyName'] = data['last_name']
-    profile['displayName'] = u'{} {}'.format(
+    profile['displayName'] = '{} {}'.format(
         data['first_name'], data['last_name']).strip()
 
     # Gender
@@ -243,8 +246,14 @@ def extract_normalize_vk_data(data):
             })
 
     # Now strip out empty values
-    for k, v in profile.items():
-        if not v or (isinstance(v, list) and not v[0]):
-            del profile[k]
+    if PY3:
+        #new_profile =  {k:v  for (k, v) in profile.items() if (v or (isinstance(v, list) and v[0])) }
+        #new_profile =  {k:v  for (k, v) in profile.items() if (v or (v[0]) if isinstance(v, list) else false) }
+        new_profile =  {k:v  for (k, v) in profile.items() if not ( not v or (isinstance(v, list) and not v[0]) ) }
+        profile = new_profile
+    else:
+        for k, v in profile.items():
+            if not v or (isinstance(v, list) and not v[0]):
+                del profile[k]
 
     return profile

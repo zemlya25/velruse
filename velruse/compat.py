@@ -1,3 +1,7 @@
+import sys
+
+PY3 = sys.version_info[0] >= 3
+
 try:
     STRING_TYPES = (str, unicode)
 except NameError: #pragma NO COVER Python >= 3.0

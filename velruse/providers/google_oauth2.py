@@ -34,11 +34,11 @@ def includeme(config):
     ``config.add_google_oauth2_login_from_settings()``
 
     """
-    config.add_directive('add_google_oauth2_login', add_google_login)
+    config.add_directive('add_google_oauth2_login', add_google_oauth2_login)
     config.add_directive('add_google_oauth2_login_from_settings',
-                         add_google_login_from_settings)
+                         add_google_oauth2_login_from_settings)
 
-def add_google_login_from_settings(config, prefix='velruse.google.'):
+def add_google_oauth2_login_from_settings(config, prefix='velruse.google_oauth2.'):
     settings = config.registry.settings
     p = ProviderSettings(settings, prefix)
     p.update('consumer_key', required=True)
@@ -48,13 +48,13 @@ def add_google_login_from_settings(config, prefix='velruse.google.'):
     p.update('callback_path')
     config.add_google_oauth2_login(**p.kwargs)
 
-def add_google_login(config,
-                     consumer_key=None,
-                     consumer_secret=None,
-                     scope=None,
-                     login_path='/login/google',
-                     callback_path='/login/google/callback',
-                     name='google'):
+def add_google_oauth2_login(config,
+                            consumer_key=None,
+                            consumer_secret=None,
+                            scope=None,
+                            login_path='/login/google_oauth2',
+                            callback_path='/login/google_oauth2/callback',
+                            name='google_oauth2'):
     """
     Add a Google login provider to the application supporting the new
     OAuth2 protocol.
