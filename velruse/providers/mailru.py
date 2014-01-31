@@ -224,7 +224,7 @@ def extract_normalize_mailru_data(data):
         profile['name']['familyName'] = last_name
 
     if first_name and last_name:
-        profile['displayName'] = u'{} {}'.format(first_name, last_name).strip()
+        profile['displayName'] = '{} {}'.format(first_name, last_name).strip()
     elif first_name:
         profile['displayName'] = first_name
     elif last_name:
