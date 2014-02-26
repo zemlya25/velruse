@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 PY3 = sys.version_info[0] >= 3
 
 requires = [
-    'pyramid',
+    'pyramid == 1.4.4',
     'requests',
     'requests-oauthlib>=0.4.0',
     'anykeystore',
