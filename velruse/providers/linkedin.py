@@ -100,7 +100,7 @@ class LinkedInProvider(object):
             oauth_problems=','.join(request.GET.getall('oauth_problem'))
             return AuthenticationDenied("ProblemReporting: %s" % oauth_problems,
                                          provider_name=self.name,
-                                         provider_type=self.type)        
+                                         provider_type=self.type)
         
         #if 'denied' in request.GET:
         #    return AuthenticationDenied("User denied authentication",
@@ -121,6 +121,7 @@ class LinkedInProvider(object):
             resource_owner_secret=request_token['oauth_token_secret'],
             verifier=verifier)
         resp = requests.post(ACCESS_URL, auth=oauth)
+        ## Тут сохраняем oauth_expires_in
         if resp.status_code != 200:
             raise ThirdPartyFailure("Status %s: %s" % (
                 resp.status_code, resp.content))
@@ -129,6 +130,7 @@ class LinkedInProvider(object):
             'oauthAccessToken': access_token['oauth_token'],
             'oauthAccessTokenSecret': access_token['oauth_token_secret'],
         }
+        oauth_expires_in = access_token['oauth_expires_in']
 
         # setup oauth for general api calls
         oauth = OAuth1(
@@ -167,6 +169,8 @@ class LinkedInProvider(object):
             'domain': 'linkedin.com',
             'userid': data['id']
         }]
+        profile['oauth_expires_in'] = oauth_expires_in
+        
         return LinkedInAuthenticationComplete(profile=profile,
                                               credentials=creds,
                                               provider_name=self.name,

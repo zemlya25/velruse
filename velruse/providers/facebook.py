@@ -108,6 +108,8 @@ class FacebookProvider(object):
                                         provider_type=self.type)
 
         # Now retrieve the access token with the code
+        # Long-live access token
+        # https://developers.facebook.com/docs/roadmap/completed-changes/offline-access-removal
         access_url = flat_url(
             'https://graph.facebook.com/oauth/access_token',
             client_id=self.consumer_key,
@@ -118,7 +120,9 @@ class FacebookProvider(object):
         if r.status_code != 200:
             raise ThirdPartyFailure("Status %s: %s" % (
                 r.status_code, r.content))
-        access_token = dict(parse_qsl(r.text))['access_token']
+        res = dict(parse_qsl(r.text))
+        access_token = res['access_token']
+        oauth_expires_in = res['expires']
 
         # Retrieve profile data
         graph_url = flat_url('https://graph.facebook.com/me',
@@ -129,6 +133,7 @@ class FacebookProvider(object):
                 r.status_code, r.content))
         fb_profile = r.json()
         profile = extract_fb_data(fb_profile)
+        profile['oauth_expires_in'] = oauth_expires_in
 
         cred = {'oauthAccessToken': access_token}
         return FacebookAuthenticationComplete(profile=profile,

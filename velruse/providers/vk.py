@@ -145,6 +145,7 @@ class VKProvider(object):
             )
         data = r.json()
         access_token = data['access_token']
+        expires_in = data['expires_in']
 
         # Retrieve profile data
         graph_url = flat_url(
